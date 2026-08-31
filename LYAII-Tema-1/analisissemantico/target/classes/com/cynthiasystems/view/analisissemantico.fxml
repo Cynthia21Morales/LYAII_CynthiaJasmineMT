@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefHeight="619.0" prefWidth="805.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cynthiasystems.controller.MainController">
+    <top>
+        <VBox prefHeight="21.0" prefWidth="500.0" spacing="5">
+            <padding>
+                <Insets bottom="8" left="12" right="12" top="12" />
+            </padding>
+            <Label style="-fx-font-size:22px;-fx-font-weight:bold;" text="ANÁLISIS SEMÁNTICO" />
+            <Label prefHeight="17.0" prefWidth="199.0" text="Cynthia Jasmine Morales Torres" />
+        </VBox>
+    </top>
+    <center>
+        <VBox spacing="8">
+            <padding>
+                <Insets bottom="12" left="12" right="12" top="5" />
+            </padding>
+            <Label text="Código de entrada" />
+            <TextArea fx:id="sourceArea" prefHeight="263.0" prefRowCount="6" prefWidth="781.0" promptText="Ejemplo: int a = 10;&#10;int b = 5;&#10;int resultado = (a + b) * 2;" />
+            <HBox spacing="8">
+                <Button onAction="#example" text="Ejemplo" />
+                <Button onAction="#analyze" text="Analizar" />
+                <Button onAction="#tree" text="Mostrar árbol" />
+                <Button onAction="#clear" text="Limpiar" />
+            </HBox>
+            <TabPane VBox.vgrow="ALWAYS">
+                <tabs>
+                    <Tab closable="false" text="Resultado / errores">
+                        <content>
+                            <TextArea fx:id="outputArea" editable="false" prefHeight="351.0" prefWidth="717.0" wrapText="true" />
+                        </content>
+                    </Tab>
+                    <Tab closable="false" text="Tabla de expresiones">
+                        <content>
+                            <TableView fx:id="expressionTable">
+                                <columns>
+                                    <TableColumn fx:id="exprCol" text="Expresión" />
+                                    <TableColumn fx:id="exprTypeCol" text="Tipo" />
+                                    <TableColumn fx:id="resultCol" text="Resultado" />
+                                    <TableColumn fx:id="statusCol" text="Estado" />
+                                </columns>
+                            </TableView>
+                        </content>
+                    </Tab>
+                    <Tab closable="false" text="Árbol de expresiones">
+                        <content>
+                            <TextArea fx:id="treeArea" editable="false" />
+                        </content>
+                    </Tab>
+                    <Tab closable="false" text="Tabla de símbolos">
+                        <content>
+                            <TableView fx:id="symbolTable">
+                                <columns>
+                                    <TableColumn fx:id="nameCol" text="Nombre" />
+                                    <TableColumn fx:id="typeCol" text="Tipo" />
+                                    <TableColumn fx:id="addressCol" text="Dirección" />
+                                    <TableColumn fx:id="valueCol" text="Valor" />
+                                </columns>
+                            </TableView>
+                        </content>
+                    </Tab>
+                    <Tab closable="false" text="Pila semántica">
+                        <content>
+                            <TextArea fx:id="stackArea" editable="false" />
+                        </content>
+                    </Tab>
+                    <Tab closable="false" text="Esquema de traducción">
+                        <content>
+                            <TextArea fx:id="translationArea" editable="false" wrapText="true" />
+                        </content>
+                    </Tab>
+                </tabs>
+            </TabPane>
+        </VBox>
+    </center>
+</BorderPane>
