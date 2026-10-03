@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.cynthiasystems.generaciondecodigointermedio.ensamblador.EnsambladorController">
+    <center>
+        <VBox spacing="12">
+            <padding>
+                <Insets top="24" right="24" bottom="24" left="24"/>
+            </padding>
+            <Label text="Lenguaje ensamblador" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+            <Label wrapText="true"
+                   text="Este es el programa ensamblador generado automáticamente a partir de la&#10;fase anterior. El ensamblador sustituye cada mnemónico por su código&#10;máquina y resuelve las referencias simbólicas (etiquetas). Puedes editarlo&#10;y volver a ensamblar si quieres experimentar."/>
+
+            <TextArea fx:id="entrada" prefRowCount="8" style="-fx-font-family: monospace;"/>
+
+            <Button text="Re-ensamblar" onAction="#ensamblar"/>
+
+            <TableView fx:id="tabla" prefHeight="260">
+                <columns>
+                    <TableColumn fx:id="colDireccion" text="Dirección"/>
+                    <TableColumn fx:id="colEtiqueta" text="Etiqueta"/>
+                    <TableColumn fx:id="colFuente" text="Instrucción (fuente)" minWidth="220"/>
+                    <TableColumn fx:id="colCodigo" text="Código máquina (hex)"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </center>
+    <bottom>
+        <HBox spacing="10">
+            <BorderPane.margin>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </BorderPane.margin>
+            <Button text="&lt;- Volver a inicio" onAction="#volverInicio"/>
+            <Button text="Siguiente: Lenguaje máquina -&gt;" onAction="#siguiente"/>
+        </HBox>
+    </bottom>
+</BorderPane>

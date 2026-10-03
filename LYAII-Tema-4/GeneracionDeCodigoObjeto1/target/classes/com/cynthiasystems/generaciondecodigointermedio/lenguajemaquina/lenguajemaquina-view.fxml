@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.cynthiasystems.generaciondecodigointermedio.lenguajemaquina.LenguajeMaquinaController">
+    <center>
+        <VBox spacing="14">
+            <padding>
+                <Insets top="24" right="24" bottom="24" left="24"/>
+            </padding>
+            <Label text="Lenguaje máquina" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+            <Label wrapText="true"
+                   text="El lenguaje máquina se basa en una lógica binaria (0 y 1); es el único que&#10;entiende directamente el hardware. Así se ve, en binario, el programa que&#10;se ensambló en la fase anterior:"/>
+            <TextArea fx:id="programaBinario" editable="false" prefRowCount="8" style="-fx-font-family: monospace;"/>
+
+            <Separator/>
+
+            <Label text="Herramientas libres" style="-fx-font-weight: bold;"/>
+            <GridPane hgap="10" vgap="10">
+                <Label text="Valor decimal:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                <TextField fx:id="campoDecimal" text="77" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                <Button text="Convertir" onAction="#convertir" GridPane.rowIndex="0" GridPane.columnIndex="2"/>
+                <Label fx:id="resultadoConversion" style="-fx-font-family: monospace;"
+                       GridPane.rowIndex="1" GridPane.columnIndex="0" GridPane.columnSpan="3"/>
+            </GridPane>
+
+            <HBox spacing="10">
+                <Label text="Interpretar binario (8 bits):"/>
+                <TextField fx:id="campoBinario" text="00010101"/>
+                <Button text="Interpretar" onAction="#interpretar"/>
+            </HBox>
+            <TextArea fx:id="resultadoInstruccion" editable="false" prefRowCount="2"
+                      style="-fx-font-family: monospace;"/>
+        </VBox>
+    </center>
+    <bottom>
+        <HBox spacing="10">
+            <BorderPane.margin>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </BorderPane.margin>
+            <Button text="&lt;- Volver a inicio" onAction="#volverInicio"/>
+            <Button text="Siguiente: Memoria -&gt;" onAction="#siguiente"/>
+        </HBox>
+    </bottom>
+</BorderPane>

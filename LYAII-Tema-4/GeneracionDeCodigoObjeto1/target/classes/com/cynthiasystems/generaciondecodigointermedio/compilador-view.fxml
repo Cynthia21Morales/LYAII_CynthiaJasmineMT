@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<!--
+  Único archivo FXML de toda la aplicación: las 6 pantallas del
+  compilador (entrada, análisis semántico, registros, ensamblador,
+  lenguaje máquina y memoria) están apiladas en este StackPane.
+  CompiladorController muestra/oculta cada panel según la fase actual
+  en lugar de cargar un .fxml distinto por pantalla.
+-->
+<StackPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+           fx:controller="com.cynthiasystems.generaciondecodigointermedio.CompiladorController">
+    <children>
+
+        <!-- ===================== 0. ENTRADA ===================== -->
+        <VBox fx:id="panelEntrada" alignment="CENTER" spacing="16">
+            <padding>
+                <Insets top="60" right="60" bottom="60" left="60"/>
+            </padding>
+            <Label text="Compilador"
+                   style="-fx-font-size: 22px; -fx-font-weight: bold;" wrapText="true"/>
+            <Label wrapText="true" style="-fx-font-size: 13px; -fx-text-fill: #666;"
+                   text="Escribe una expresión aritmética como código fuente."/>
+            <TextField fx:id="campoExpresion" text="a + b * c - d" prefWidth="360"
+                       style="-fx-font-family: monospace; -fx-font-size: 14px;"/>
+            <Button text="Compilar -&gt;" onAction="#compilar" minWidth="180" minHeight="40"/>
+            <Label fx:id="etiquetaErrorEntrada" style="-fx-text-fill: #d33;" wrapText="true"/>
+        </VBox>
+
+        <!-- ===================== 1. ANÁLISIS SEMÁNTICO ===================== -->
+        <BorderPane fx:id="panelSemantico" visible="false" managed="false">
+            <center>
+                <VBox spacing="12">
+                    <padding>
+                        <Insets top="24" right="24" bottom="24" left="24"/>
+                    </padding>
+                    <Label text="Análisis semántico" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+                    <Label wrapText="true"
+                           text="Se construye la tabla de símbolos con las variables de la expresión y se&#10;validan reglas que la gramática no detecta por sí sola (identificadores&#10;inválidos, división entre cero, operadores consecutivos, paréntesis sin balancear)."/>
+                    <Label text="Tabla de símbolos" style="-fx-font-weight: bold;"/>
+                    <TableView fx:id="tablaSimbolos" prefHeight="160">
+                        <columns>
+                            <TableColumn fx:id="colOrden" text="#" prefWidth="50"/>
+                            <TableColumn fx:id="colNombre" text="Nombre" prefWidth="150"/>
+                            <TableColumn fx:id="colTipo" text="Tipo inferido" prefWidth="150"/>
+                        </columns>
+                    </TableView>
+                    <Label text="Resultado del análisis" style="-fx-font-weight: bold;"/>
+                    <TextArea fx:id="erroresSemanticos" editable="false" prefRowCount="4"
+                              style="-fx-font-family: monospace;"/>
+                </VBox>
+            </center>
+            <bottom>
+                <HBox spacing="10">
+                    <BorderPane.margin>
+                        <Insets top="10" right="10" bottom="10" left="10"/>
+                    </BorderPane.margin>
+                    <Button text="&lt;- Corregir en inicio" onAction="#volverEntradaDesdeSemantico"/>
+                    <Button fx:id="botonSiguienteARegistros" text="Siguiente: Registros -&gt;" onAction="#irARegistros"/>
+                </HBox>
+            </bottom>
+        </BorderPane>
+
+        <!-- ===================== 2. REGISTROS (4.1) ===================== -->
+        <BorderPane fx:id="panelRegistros" visible="false" managed="false">
+            <center>
+                <VBox spacing="12">
+                    <padding>
+                        <Insets top="24" right="24" bottom="24" left="24"/>
+                    </padding>
+                    <Label text="Registros" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+                    <Label wrapText="true"
+                           text="Los registros son escasos y valiosos: el CPU solo procesa datos que están en&#10;ellos. Así se asignaron para tu expresión, reutilizándolos cuando ya no se necesitan."/>
+                    <Label fx:id="etiquetaExpresionRegistros" style="-fx-font-family: monospace; -fx-font-weight: bold;"/>
+                    <TextArea fx:id="salidaRegistros" editable="false" prefRowCount="14" style="-fx-font-family: monospace;"/>
+                </VBox>
+            </center>
+            <bottom>
+                <HBox spacing="10">
+                    <BorderPane.margin>
+                        <Insets top="10" right="10" bottom="10" left="10"/>
+                    </BorderPane.margin>
+                    <Button text="Siguiente: Ensamblador -&gt;" onAction="#irAEnsamblador"/>
+                </HBox>
+            </bottom>
+        </BorderPane>
+
+        <!-- ===================== 3. ENSAMBLADOR (4.2) ===================== -->
+        <BorderPane fx:id="panelEnsamblador" visible="false" managed="false">
+            <center>
+                <VBox spacing="12">
+                    <padding>
+                        <Insets top="24" right="24" bottom="24" left="24"/>
+                    </padding>
+                    <Label text="Lenguaje ensamblador" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+                    <Label wrapText="true"
+                           text="Este es el programa ensamblador generado a partir de la fase anterior. El&#10;ensamblador sustituye cada mnemónico por su código máquina y resuelve las&#10;referencias simbólicas (etiquetas). Puedes editarlo y volver a ensamblar."/>
+                    <TextArea fx:id="entradaEnsamblador" prefRowCount="7" style="-fx-font-family: monospace;"/>
+                    <Button text="Re-ensamblar" onAction="#reensamblar"/>
+                    <TableView fx:id="tablaEnsamblador" prefHeight="200">
+                        <columns>
+                            <TableColumn fx:id="colDireccion" text="Dirección" prefWidth="80"/>
+                            <TableColumn fx:id="colEtiqueta" text="Etiqueta" prefWidth="90"/>
+                            <TableColumn fx:id="colFuente" text="Instrucción (fuente)" prefWidth="220"/>
+                            <TableColumn fx:id="colCodigo" text="Código máquina (hex)" prefWidth="160"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </center>
+            <bottom>
+                <HBox spacing="10">
+                    <BorderPane.margin>
+                        <Insets top="10" right="10" bottom="10" left="10"/>
+                    </BorderPane.margin>
+                    <Button text="Siguiente: Lenguaje máquina -&gt;" onAction="#irALenguajeMaquina"/>
+                </HBox>
+            </bottom>
+        </BorderPane>
+
+        <!-- ===================== 4. LENGUAJE MÁQUINA (4.3) ===================== -->
+        <BorderPane fx:id="panelLenguajeMaquina" visible="false" managed="false">
+            <center>
+                <VBox spacing="14">
+                    <padding>
+                        <Insets top="24" right="24" bottom="24" left="24"/>
+                    </padding>
+                    <Label text="Lenguaje máquina" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+                    <Label wrapText="true"
+                           text="El lenguaje máquina se basa en una lógica binaria (0 y 1). Así se ve, en&#10;binario, el programa que se ensambló en la fase anterior:"/>
+                    <TextArea fx:id="programaBinario" editable="false" prefRowCount="7" style="-fx-font-family: monospace;"/>
+                    <Separator/>
+                    <Label text="Herramientas libres" style="-fx-font-weight: bold;"/>
+                    <GridPane hgap="10" vgap="10">
+                        <Label text="Valor decimal:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                        <TextField fx:id="campoDecimal" text="77" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                        <Button text="Convertir" onAction="#convertir" GridPane.rowIndex="0" GridPane.columnIndex="2"/>
+                        <Label fx:id="resultadoConversion" style="-fx-font-family: monospace;"
+                               GridPane.rowIndex="1" GridPane.columnIndex="0" GridPane.columnSpan="3"/>
+                    </GridPane>
+                    <HBox spacing="10">
+                        <Label text="Interpretar binario (8 bits):"/>
+                        <TextField fx:id="campoBinario" text="00010101"/>
+                        <Button text="Interpretar" onAction="#interpretar"/>
+                    </HBox>
+                    <TextArea fx:id="resultadoInstruccion" editable="false" prefRowCount="2" style="-fx-font-family: monospace;"/>
+                </VBox>
+            </center>
+            <bottom>
+                <HBox spacing="10">
+                    <BorderPane.margin>
+                        <Insets top="10" right="10" bottom="10" left="10"/>
+                    </BorderPane.margin>
+                    <Button text="Siguiente: Memoria -&gt;" onAction="#irAMemoria"/>
+                </HBox>
+            </bottom>
+        </BorderPane>
+
+        <!-- ===================== 5. MEMORIA (4.4) ===================== -->
+        <BorderPane fx:id="panelMemoria" visible="false" managed="false">
+            <center>
+                <VBox spacing="12">
+                    <padding>
+                        <Insets top="24" right="24" bottom="24" left="24"/>
+                    </padding>
+                    <Label text="Administración de memoria" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+                    <Label wrapText="true"
+                           text="La memoria principal es un arreglo lineal de localidades de un byte. Las&#10;variables de tu expresión ya se reservaron automáticamente; también puedes&#10;asignar otras, liberarlas o simular un recolector de basura."/>
+                    <FlowPane fx:id="cuadriculaMemoria" hgap="4" vgap="4" prefWrapLength="520"/>
+                    <HBox spacing="10">
+                        <TextField fx:id="campoVariableMemoria" promptText="nombre variable" prefWidth="110"/>
+                        <TextField fx:id="campoTamanioMemoria" promptText="tamaño (bytes)" prefWidth="110"/>
+                        <Button text="Asignar" onAction="#asignarMemoria"/>
+                        <Button text="Liberar" onAction="#liberarMemoria"/>
+                    </HBox>
+                    <Button text="Simular recolector de basura" onAction="#recolectarBasura"/>
+                    <Label wrapText="true" style="-fx-font-size: 11px; -fx-text-fill: #666;"
+                           text="Para el recolector: escribe en 'nombre variable' las variables vivas separadas por comas (vacío = ninguna viva)."/>
+                    <Label fx:id="etiquetaEstadoMemoria"/>
+                </VBox>
+            </center>
+            <bottom>
+                <Button text="Finalizar (volver a inicio)" onAction="#finalizar">
+                    <BorderPane.margin>
+                        <Insets top="10" right="10" bottom="10" left="10"/>
+                    </BorderPane.margin>
+                </Button>
+            </bottom>
+        </BorderPane>
+
+    </children>
+</StackPane>

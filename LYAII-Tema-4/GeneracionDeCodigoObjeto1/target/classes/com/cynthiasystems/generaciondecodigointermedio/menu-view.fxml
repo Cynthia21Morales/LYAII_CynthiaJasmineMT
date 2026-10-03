@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox alignment="CENTER" spacing="14" xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.cynthiasystems.generaciondecodigointermedio.MenuController">
+    <padding>
+        <Insets top="40" right="40" bottom="40" left="40"/>
+    </padding>
+
+    <Label text="Generación de código objeto"
+           style="-fx-font-size: 22px; -fx-font-weight: bold;"/>
+    <Label text="Selecciona una sección para ver su demostración interactiva"
+           style="-fx-font-size: 13px; -fx-text-fill: #666;"/>
+
+    <Button text="Registros&#10;Asignación y uso de registros del CPU"
+            minWidth="420" minHeight="60" onAction="#irARegistros"/>
+    <Button text="Lenguaje ensamblador&#10;Traductor mnemónico -&gt; código máquina"
+            minWidth="420" minHeight="60" onAction="#irAEnsamblador"/>
+    <Button text="Lenguaje máquina&#10;Conversor binario / decimal / hexadecimal"
+            minWidth="420" minHeight="60" onAction="#irALenguajeMaquina"/>
+    <Button text="Administración de memoria&#10;Simulación de un arreglo lineal de memoria"
+            minWidth="420" minHeight="60" onAction="#irAMemoria"/>
+</VBox>
